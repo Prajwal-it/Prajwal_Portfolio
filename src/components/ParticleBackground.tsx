@@ -8,11 +8,13 @@ interface Particle {
   size: number;
   color: string;
   alpha: number;
+  targetX: number;
+  targetY: number;
 }
 
 export default function ParticleBackground() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
-  const mouseRef = useRef({ x: 0, y: 0 });
+  const mouseRef = useRef({ x: -1000, y: -1000 });
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -22,23 +24,29 @@ export default function ParticleBackground() {
 
     let animId: number;
     const particles: Particle[] = [];
-    const COLORS = ["rgba(99,102,241,", "rgba(6,182,212,", "rgba(139,92,246,"];
-    const COUNT = 120;
+    const COLORS = ["rgba(99,102,241,", "rgba(139,92,246,", "rgba(6,182,212,"];
+    const COUNT = 100;
 
     const resize = () => {
       canvas.width = window.innerWidth;
       canvas.height = window.innerHeight;
     };
 
-    const spawn = (): Particle => ({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      size: Math.random() * 1.8 + 0.4,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-      alpha: Math.random() * 0.5 + 0.15,
-    });
+    const spawn = (): Particle => {
+      const x = Math.random() * window.innerWidth;
+      const y = Math.random() * window.innerHeight;
+      return {
+        x,
+        y,
+        targetX: x,
+        targetY: y,
+        vx: (Math.random() - 0.5) * 0.2,
+        vy: (Math.random() - 0.5) * 0.2,
+        size: Math.random() * 2 + 0.5,
+        color: COLORS[Math.floor(Math.random() * COLORS.length)],
+        alpha: Math.random() * 0.4 + 0.1,
+      };
+    };
 
     resize();
     window.addEventListener("resize", resize);
@@ -56,23 +64,24 @@ export default function ParticleBackground() {
       const mx = mouseRef.current.x;
       const my = mouseRef.current.y;
 
-      particles.forEach((p) => {
-        // Subtle mouse repulsion
-        const dx = p.x - mx;
-        const dy = p.y - my;
-        const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < 120) {
-          p.vx += (dx / dist) * 0.04;
-          p.vy += (dy / dist) * 0.04;
-        }
-
-        // Dampen & move
-        p.vx *= 0.995;
-        p.vy *= 0.995;
+      particles.forEach((p, i) => {
+        // Natural movement
         p.x += p.vx;
         p.y += p.vy;
 
-        // Wrap around edges
+        // Interaction: move away from mouse
+        const dx = p.x - mx;
+        const dy = p.y - my;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        const radius = 150;
+
+        if (dist < radius) {
+          const force = (radius - dist) / radius;
+          p.x += (dx / dist) * force * 5;
+          p.y += (dy / dist) * force * 5;
+        }
+
+        // Wrap edges
         if (p.x < 0) p.x = canvas.width;
         if (p.x > canvas.width) p.x = 0;
         if (p.y < 0) p.y = canvas.height;
@@ -83,24 +92,33 @@ export default function ParticleBackground() {
         ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
         ctx.fillStyle = `${p.color}${p.alpha})`;
         ctx.fill();
-      });
 
-      // Draw connection lines between nearby particles
-      for (let i = 0; i < particles.length; i++) {
+        // Connect to mouse for interactivity
+        if (dist < 200) {
+          ctx.beginPath();
+          ctx.moveTo(p.x, p.y);
+          ctx.lineTo(mx, my);
+          ctx.strokeStyle = `${p.color}${0.1 * (1 - dist / 200)})`;
+          ctx.lineWidth = 0.5;
+          ctx.stroke();
+        }
+
+        // Connect to nearby particles
         for (let j = i + 1; j < particles.length; j++) {
-          const dx = particles[i].x - particles[j].x;
-          const dy = particles[i].y - particles[j].y;
-          const d = Math.sqrt(dx * dx + dy * dy);
-          if (d < 100) {
+          const p2 = particles[j];
+          const dx2 = p.x - p2.x;
+          const dy2 = p.y - p2.y;
+          const dist2 = Math.sqrt(dx2 * dx2 + dy2 * dy2);
+          if (dist2 < 120) {
             ctx.beginPath();
-            ctx.moveTo(particles[i].x, particles[i].y);
-            ctx.lineTo(particles[j].x, particles[j].y);
-            ctx.strokeStyle = `rgba(99,102,241,${0.08 * (1 - d / 100)})`;
-            ctx.lineWidth = 0.5;
+            ctx.moveTo(p.x, p.y);
+            ctx.lineTo(p2.x, p2.y);
+            ctx.strokeStyle = `rgba(99,102,241,${0.12 * (1 - dist2 / 120)})`;
+            ctx.lineWidth = 0.8;
             ctx.stroke();
           }
         }
-      }
+      });
 
       animId = requestAnimationFrame(draw);
     };
@@ -117,13 +135,8 @@ export default function ParticleBackground() {
   return (
     <canvas
       ref={canvasRef}
-      style={{
-        position: "absolute",
-        inset: 0,
-        width: "100%",
-        height: "100%",
-        pointerEvents: "none",
-      }}
+      className="fixed inset-0 pointer-events-none"
+      style={{ zIndex: 0 }}
     />
   );
 }

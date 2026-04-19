@@ -33,7 +33,7 @@ function SkillPill({ name, color }: { name: string; color: string }) {
 
 export default function Skills() {
   return (
-    <section id="skills" className="py-32 overflow-hidden">
+    <section id="skills" className="py-16 overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12 mb-16">
         <div className="text-center">
           <span

@@ -12,7 +12,7 @@ export default function Projects() {
     active === "All" ? projects : projects.filter((p) => p.category === active);
 
   return (
-    <section id="projects" className="py-32 px-6 md:px-12 max-w-7xl mx-auto">
+    <section id="projects" className="py-16 px-6 md:px-12 max-w-7xl mx-auto">
       <div className="text-center mb-12">
         <span
           className="text-xs tracking-widest uppercase font-mono"

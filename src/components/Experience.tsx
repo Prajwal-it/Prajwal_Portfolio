@@ -4,7 +4,7 @@ import { Briefcase, MapPin, Calendar } from "lucide-react";
 
 export default function Experience() {
   return (
-    <section id="experience" className="py-32 px-6 md:px-12 max-w-5xl mx-auto">
+    <section id="experience" className="py-16 px-6 md:px-12 max-w-5xl mx-auto">
       <div className="text-center mb-16">
         <span className="text-xs tracking-widest uppercase font-mono" style={{ color: "var(--indigo)" }}>
           Where I&apos;ve worked
