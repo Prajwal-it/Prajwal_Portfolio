@@ -1,7 +1,8 @@
 
 import { useState, useEffect } from "react";
 import { personalInfo } from "../lib/data";
-import { Github, Linkedin, Twitter, Mail, ArrowUp } from "lucide-react";
+import { Mail, ArrowUp } from "lucide-react";
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 const navLinks = [
   { label: "About", href: "#about" },
@@ -49,9 +50,9 @@ export default function Footer() {
               </p>
               <div className="flex gap-3 mt-4">
                 {[
-                  { icon: <Github size={16} />, href: personalInfo.github, label: "GitHub" },
-                  { icon: <Linkedin size={16} />, href: personalInfo.linkedin, label: "LinkedIn" },
-                  { icon: <Twitter size={16} />, href: personalInfo.twitter, label: "Twitter" },
+                  { icon: <FaGithub size={16} />, href: personalInfo.github, label: "GitHub" },
+                  { icon: <FaLinkedin size={16} />, href: personalInfo.linkedin, label: "LinkedIn" },
+                  { icon: <FaTwitter size={16} />, href: personalInfo.twitter, label: "Twitter" },
                   { icon: <Mail size={16} />, href: `mailto:${personalInfo.email}`, label: "Email" },
                 ].map((s) => (
                   <a
@@ -114,7 +115,7 @@ export default function Footer() {
             </span>
             <span>
               Built with ❤️ using{" "}
-              <span style={{ color: "var(--indigo)" }}>Next.js</span> &{" "}
+              <span style={{ color: "var(--indigo)" }}>React</span> &{" "}
               <span style={{ color: "var(--cyan)" }}>Tailwind CSS</span>
             </span>
           </div>

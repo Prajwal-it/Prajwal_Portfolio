@@ -1,5 +1,6 @@
 import { personalInfo, stats } from "../lib/data";
-import { MapPin, Mail, Github, Linkedin } from "lucide-react";
+import { MapPin, Mail } from "lucide-react";
+import { FaGithub, FaLinkedin } from "react-icons/fa";
 
 function StatCard({
   value,
@@ -114,7 +115,7 @@ export default function About() {
               className="glass p-3 rounded-xl hover:border-indigo-500/50 transition-colors"
               style={{ color: "var(--text)", cursor: "none" }}
             >
-              <Github size={20} />
+              <FaGithub size={20} />
             </a>
             <a
               href={personalInfo.linkedin}
@@ -124,7 +125,7 @@ export default function About() {
               className="glass p-3 rounded-xl hover:border-indigo-500/50 transition-colors"
               style={{ color: "var(--text)", cursor: "none" }}
             >
-              <Linkedin size={20} />
+              <FaLinkedin size={20} />
             </a>
           </div>
         </div>

@@ -1,7 +1,8 @@
 
 import { useState, FormEvent } from "react";
 import { personalInfo } from "../lib/data";
-import { Mail, Github, Linkedin, Twitter, Send, CheckCircle, AlertCircle, Loader } from "lucide-react";
+import { Mail, Send, CheckCircle, AlertCircle, Loader } from "lucide-react";
+import { FaGithub, FaLinkedin, FaTwitter } from "react-icons/fa";
 
 interface FormState {
   name: string;
@@ -36,9 +37,9 @@ export default function Contact() {
 
   const socials = [
     { icon: <Mail size={18} />, label: "Email", href: `mailto:${personalInfo.email}`, value: personalInfo.email },
-    { icon: <Github size={18} />, label: "GitHub", href: personalInfo.github, value: "Prajwal-it" },
-    { icon: <Linkedin size={18} />, label: "LinkedIn", href: personalInfo.linkedin, value: "prajwalbanthiya" },
-    { icon: <Twitter size={18} />, label: "Twitter", href: personalInfo.twitter, value: "@prajwalbanthiya" },
+    { icon: <FaGithub size={18} />, label: "GitHub", href: personalInfo.github, value: "Prajwal-it" },
+    { icon: <FaLinkedin size={18} />, label: "LinkedIn", href: personalInfo.linkedin, value: "prajwalbanthiya" },
+    { icon: <FaTwitter size={18} />, label: "Twitter", href: personalInfo.twitter, value: "@prajwalbanthiya" },
   ];
 
   return (
